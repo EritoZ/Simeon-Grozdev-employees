@@ -69,7 +69,6 @@ function csvProcess(csvString) {
     }
 
     const projectAssignments = {};
-    const workedTogether = {};
 
     for (const employee of data) {
       const projectID = employee['ProjectID'];
@@ -93,6 +92,8 @@ function csvProcess(csvString) {
         'dateTo': dateTo
       }
     }
+
+    const workedTogether = {};
 
     for (const projectID in projectAssignments) {
       const projectGroup = Object.entries(projectAssignments[projectID]);
@@ -121,18 +122,27 @@ function csvProcess(csvString) {
           const diff = earliestEnd - latestStart;
           const diffDays = diff / (1000 * 60 * 60 * 24);
 
-          workedTogether[diffDays] = {'empl1ID': employee1Info[0], 'empl2ID': employee2Info[0],
-            'projID': projectID, 'days': Math.floor(diffDays)};
+          const pairID = `${employee1Info[0]}${employee2Info[0]}`.split('')
+              .sort((a, b) => a.localeCompare(b)).join('');
+
+          if (!workedTogether.hasOwnProperty(pairID)) {
+            workedTogether[pairID] = [0];
+          }
+
+          workedTogether[pairID][0] += diffDays;
+          workedTogether[pairID].push({'empl1ID': employee1Info[0],
+            'empl2ID': employee2Info[0], 'projID': projectID, 'days': Math.floor(diffDays)});
+
         }
       }
     }
 
-    const days = Object.keys(workedTogether);
+    const workedTogetherArray = Object.values(workedTogether);
 
-    const longestTimeTogether = days.reduce((a, b) => Math.max(Number(a), Number(b)),
-        -Infinity);
+    const longestTimeTogether = workedTogetherArray
+        .sort((a, b) => b[0] - a[0])[0]
 
-    return workedTogether[longestTimeTogether]
+    return longestTimeTogether
   }
 
   return processData(data);

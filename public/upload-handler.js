@@ -38,25 +38,30 @@ function uploadFile(e) {
         const tbody = document.querySelector('#dataGrid tbody');
         tbody.textContent = '';
 
-        const tr = document.createElement('tr');
+        for (let i = 1; i < data.length; i++) {
+            const pair = data[i];
 
-        const tdEmployee1ID = document.createElement('td');
-        tdEmployee1ID.textContent = data['empl1ID'];
-        tr.appendChild(tdEmployee1ID);
+            const tr = document.createElement('tr');
 
-        const tdEmployee2ID = document.createElement('td');
-        tdEmployee2ID.textContent = data['empl2ID'];
-        tr.appendChild(tdEmployee2ID);
+            const tdEmployee1ID = document.createElement('td');
+            tdEmployee1ID.textContent = pair['empl1ID'];
+            tr.appendChild(tdEmployee1ID);
 
-        const tdProject= document.createElement('td');
-        tdProject.textContent = data['projID'];
-        tr.appendChild(tdProject);
+            const tdEmployee2ID = document.createElement('td');
+            tdEmployee2ID.textContent = pair['empl2ID'];
+            tr.appendChild(tdEmployee2ID);
 
-        const tdDays= document.createElement('td');
-        tdDays.textContent = data['days'];
-        tr.appendChild(tdDays);
+            const tdProject= document.createElement('td');
+            tdProject.textContent = pair['projID'];
+            tr.appendChild(tdProject);
 
-        tbody.appendChild(tr);
+            const tdDays= document.createElement('td');
+            tdDays.textContent = pair['days'];
+            tr.appendChild(tdDays);
+
+            tbody.appendChild(tr);
+
+        }
     }
 }
 
