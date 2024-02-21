@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Task</title>
+</head>
+<body>
+    <h2>Pair of employees who have worked together</h2>
+
+    <section id="upload-form">
+        <h3>Upload CSV File</h3>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" id="csv-file"/>
+            <button id="upload-csv" type="button">Upload</button>
+            <button type="button" id="clear-input">Clear</button>
+        </form>
+    </section>
+
+    <section id="table">
+        <table id="dataGrid">
+          <thead>
+            <tr>
+              <th>Employee ID #1</th>
+              <th>Employee ID #2</th>
+              <th>Project ID</th>
+              <th>Days worked</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+    </section>
+
+    <script src="upload-handler.js"></script>
+</body>
+</html>

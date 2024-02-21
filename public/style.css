@@ -1,0 +1,28 @@
+h2 {
+    margin-bottom: 2em;
+    width: 100%;
+    text-align: center;
+}
+
+table * {
+    border: 1px solid black;
+    padding: 0.4em;
+    margin: 0;
+}
+
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+section form {
+    margin-left: 2em;
+}
+
+table {
+    margin-top: 2em;
+    border-collapse: collapse;
+    align-content: center;
+}
+
