@@ -25,9 +25,19 @@ app.post('/upload', upload.single('csv-file'), (req, res) => {
   const fileBuffer = req.file.buffer;
   const fileContent = fileBuffer.toString('utf8');
 
-  const content = csvProcess(fileContent);
+  try {
+    const content = csvProcess(fileContent);
 
-  res.send(content)
+    res.send(content)
+  } catch (error) {
+
+    if (error.message === 'Invalid date format.') {
+      res.status(400).send({error: 'Invalid date format in CSV data.'});
+
+    } else {
+      res.status(500).send({error: 'An error occurred while processing the CSV data.'});
+    }
+  }
 });
 
 function csvProcess(csvString) {
@@ -92,7 +102,6 @@ function csvProcess(csvString) {
         'dateTo': dateTo
       }
     }
-
 
     function getWorkedTogether(projectAssignments) {
       const workedTogether = {};

@@ -29,8 +29,16 @@ function uploadFile(e) {
         body: formData,
     })
     .then(response => response.json())
-    .then(data => displayProcessedInformation(data))
+    .then(data => {
+        if (data && data.error) {
+          alert(data.error);
+        } else {
+          displayProcessedInformation(data);
+        }
+
+    })
     .catch(error => {
+        alert(error)
         console.error('Upload failed:', error);
     });
 
