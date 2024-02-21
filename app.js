@@ -93,56 +93,78 @@ function csvProcess(csvString) {
       }
     }
 
-    const workedTogether = {};
 
-    for (const projectID in projectAssignments) {
-      const projectGroup = Object.entries(projectAssignments[projectID]);
+    function getWorkedTogether(projectAssignments) {
+      const workedTogether = {};
 
-      for (let i = 0; i < projectGroup.length; i++) {
+      for (const projectID in projectAssignments) {
+        const projectGroup = Object.entries(projectAssignments[projectID]);
 
-        const employee1Info = projectGroup[i];
+        for (let i = 0; i < projectGroup.length; i++) {
 
-        for (let j = i + 1; j < projectGroup.length; j++) {
+          const employee1Info = projectGroup[i];
 
-          const employee2Info = projectGroup[j];
+          for (let j = i + 1; j < projectGroup.length; j++) {
 
-          const empl1Start = employee1Info[1]['dateFrom'];
-          const empl1End = employee1Info[1]['dateTo'];
+            const employee2Info = projectGroup[j];
 
-          const empl2Start = employee2Info[1]['dateFrom'];
-          const empl2End = employee2Info[1]['dateTo'];
+            const empl1Start = employee1Info[1]['dateFrom'];
+            const empl1End = employee1Info[1]['dateTo'];
 
-          if (empl2End < empl1Start || empl2Start > empl1End) {
-            continue; // No overlap
+            const empl2Start = employee2Info[1]['dateFrom'];
+            const empl2End = employee2Info[1]['dateTo'];
+
+            if (empl2End < empl1Start || empl2Start > empl1End) {
+              continue; // No overlap
+            }
+
+            const latestStart = Math.max(empl1Start.getTime(), empl2Start.getTime());
+            const earliestEnd = Math.min(empl1End.getTime(), empl2End.getTime());
+
+            const diff = earliestEnd - latestStart;
+            const diffDays = diff / (1000 * 60 * 60 * 24);
+
+            const pairID = `${employee1Info[0]}${employee2Info[0]}`.split('')
+                .sort((a, b) => a.localeCompare(b)).join('');
+
+            if (!workedTogether.hasOwnProperty(pairID)) {
+              workedTogether[pairID] = [0];
+            }
+
+            workedTogether[pairID][0] += diffDays;
+            workedTogether[pairID].push({'empl1ID': employee1Info[0],
+              'empl2ID': employee2Info[0], 'projID': projectID, 'days': Math.floor(diffDays)});
+
           }
-
-          const latestStart = Math.max(empl1Start.getTime(), empl2Start.getTime());
-          const earliestEnd = Math.min(empl1End.getTime(), empl2End.getTime());
-
-          const diff = earliestEnd - latestStart;
-          const diffDays = diff / (1000 * 60 * 60 * 24);
-
-          const pairID = `${employee1Info[0]}${employee2Info[0]}`.split('')
-              .sort((a, b) => a.localeCompare(b)).join('');
-
-          if (!workedTogether.hasOwnProperty(pairID)) {
-            workedTogether[pairID] = [0];
-          }
-
-          workedTogether[pairID][0] += diffDays;
-          workedTogether[pairID].push({'empl1ID': employee1Info[0],
-            'empl2ID': employee2Info[0], 'projID': projectID, 'days': Math.floor(diffDays)});
-
         }
       }
+
+      return workedTogether;
     }
 
-    const workedTogetherArray = Object.values(workedTogether);
+    const workedTogether = getWorkedTogether(projectAssignments);
 
-    const longestTimeTogether = workedTogetherArray
-        .sort((a, b) => b[0] - a[0])[0]
+    function getPairsWorkedTogetherLongest(workedTogether) {
+      const workedTogetherArray = Object.values(workedTogether);
 
-    return longestTimeTogether
+      let longestTimeTogether = workedTogetherArray
+          .sort((a, b) => b[0] - a[0])[0];
+
+      for (let i = 1; i < workedTogetherArray.length; i++) {
+        if (workedTogetherArray[i][0] !== longestTimeTogether[0]) {
+          break;
+        }
+
+        workedTogetherArray[i].shift()
+
+        longestTimeTogether = longestTimeTogether.concat(workedTogetherArray[i]);
+      }
+
+      return longestTimeTogether
+
+    }
+
+    return getPairsWorkedTogetherLongest(workedTogether)
   }
 
   return processData(data);
