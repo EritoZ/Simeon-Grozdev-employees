@@ -47,7 +47,7 @@ function csvProcess(csvString) {
   const headers = lines.shift().split(','); // Assume first line is headers
 
   const data = lines.map(line => {
-    const data = line.split(',');
+    const data = line.split(/, ?/);
 
     return headers.reduce((obj, nextKey, index) => {
       obj[nextKey] = data[index];

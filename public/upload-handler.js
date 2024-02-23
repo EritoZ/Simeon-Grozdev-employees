@@ -35,9 +35,12 @@ function uploadFile(e) {
         } else {
           displayProcessedInformation(data);
         }
-
     })
     .catch(error => {
+        if (error.message ===  'JSON.parse: unexpected end of data at line 1 column 1 of the JSON data') {
+            return;
+        }
+
         alert(error)
         console.error('Upload failed:', error);
     });
