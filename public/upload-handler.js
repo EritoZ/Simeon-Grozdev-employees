@@ -38,7 +38,7 @@ function uploadFile(e) {
     })
     .catch(error => {
         if (error.message.includes('expected end')) {
-            clearInput()
+            displayProcessedInformation({})
             return;
         }
 
