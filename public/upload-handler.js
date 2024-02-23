@@ -37,7 +37,8 @@ function uploadFile(e) {
         }
     })
     .catch(error => {
-        if (error.message ===  'JSON.parse: unexpected end of data at line 1 column 1 of the JSON data') {
+        if (error.message.includes('expected end')) {
+            clearInput()
             return;
         }
 
