@@ -41,7 +41,7 @@ app.post('/upload', upload.single('csv-file'), (req, res) => {
 });
 
 function csvProcess(csvString) {
-  let lines = csvString.split('\n');
+  let lines = csvString.split(/\r?\n|\r/);
   lines = lines.filter((value) => value !== '');
 
   const headers = lines.shift().split(','); // Assume first line is headers
